@@ -1,7 +1,8 @@
 //
-var through = require('through')
-var Buffer  = require('buffer').Buffer
-var Parser = require('redis/lib/parser/javascript').Parser
+var through  = require('through')
+var Buffer   = require('buffer').Buffer
+var Parser   = require('redis/lib/parser/javascript').Parser
+var combiner = require('stream-combiner')
 
 exports.stringify = function () {
 
@@ -11,9 +12,9 @@ exports.stringify = function () {
     ary.forEach(function (chunk) {
       if(Buffer.isBuffer(chunk)) {
         //avoid turning a buffer into a string unnecessarily.
-        self.queue(new Buffer('$'+chunk.length + '\r\n')).queue(chunk).queue(new Buffer('\r\n'))
+        self.queue('$'+chunk.length + '\r\n').queue(chunk).queue('\r\n')
       } else {      
-        self.queue(new Buffer('$'+chunk.length + '\r\n' + chunk + '\r\n'))
+        self.queue('$'+chunk.length + '\r\n' + chunk + '\r\n')
       }
     })
   })
@@ -28,6 +29,15 @@ exports.parse = function (opts) {
     ts.queue(data)
   })
   return ts = through(function (data) {
-    parser.execute(data)
+    
+    parser.execute(Buffer.isBuffer(data) ? data : new Buffer(data))
   })
 }
+
+exports.serializer =
+exports.serialize = function (stream, opts) {
+  return combiner(
+    exports.parse(opts), stream, exports.stringify()
+  )
+}
+
