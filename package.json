@@ -11,7 +11,9 @@
     "stream-combiner": "0.0.0",
     "redis": "~0.8.2"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "tape": "0.0.4"
+  },
   "scripts": {
     "test": "set -e; for t in test/*.js; do node $t; done"
   },
