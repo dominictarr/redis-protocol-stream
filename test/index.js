@@ -1,4 +1,4 @@
-require('tape')('REDIS protocol stream', function (t){
+require('tape')('REDIS protocol stream', function (t) {
 
   var REDIS = require('..')
 
