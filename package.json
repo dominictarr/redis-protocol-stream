@@ -7,7 +7,7 @@
     "url": "git://github.com/dominictarr/redis-protocol-stream.git"
   },
   "dependencies": {
-    "through": "~2.0.0",
+    "through": "~2.1.0",
     "stream-combiner": "0.0.0",
     "redis": "~0.8.2"
   },
